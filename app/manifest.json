@@ -1,0 +1,19 @@
+{
+  "name": "Categorization",
+  "author": {
+    "name": "Zena Hirsch",
+    "email": "zena@vimeo.com",
+    "url": "https://vimeo.com"
+  },
+  "defaultLocale": "en",
+  "private": true,
+  "location": {
+    "support": {
+      "ticket_sidebar": "assets/index.html"
+    }
+  },
+  "version": "1.0",
+  "frameworkVersion": "2.0",
+  "parameters": [],
+  "domainWhitelist": []
+}
