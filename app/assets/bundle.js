@@ -22208,7 +22208,6 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
- //import subcategories from './subcategories';
 
 var actions = {
   RESET_STORE: 'RESET_STORE',
@@ -22221,14 +22220,23 @@ var setAppHeight = function setAppHeight(height) {
   });
 };
 var applyListeners = function applyListeners() {
-  return function (dispatch) {
-    /*ZAFClient.on('ticket.custom_field_360016232092.changed', function (subcategory) {
-        dispatch(changeState({ saved_subcategory: subcategory }));
-    });*/
+  return function (dispatch, getState) {
     _misc_ZAFClient__WEBPACK_IMPORTED_MODULE_0__["default"].on('ticket.status.changed', function (ticket_status) {
       dispatch(changeState({
         ticket_status: ticket_status
       }));
+    });
+    _misc_ZAFClient__WEBPACK_IMPORTED_MODULE_0__["default"].on('ticket.save', function () {
+      var _getState = getState(),
+          saved_subcategory = _getState.saved_subcategory;
+
+      console.log('saved_subcategory:', saved_subcategory);
+
+      if (!saved_subcategory) {
+        return 'Ticket must be categorized.';
+      }
+
+      return true;
     });
   };
 };
@@ -22253,37 +22261,13 @@ var getGroup = function getGroup() {
 var getSavedSubcategoryFromTicket = function getSavedSubcategoryFromTicket() {
   return function (dispatch) {
     _misc_ZAFClient__WEBPACK_IMPORTED_MODULE_0__["default"].get('ticket.customField:custom_field_360016232092').then(function (data) {
+      var saved_subcategory = data['ticket.customField:custom_field_360016232092'];
       dispatch(changeState({
-        saved_subcategory: data['ticket.customField:custom_field_360016232092']
+        saved_subcategory: saved_subcategory
       }));
     });
   };
 };
-/*
-export const getSavedSubcategoryFromTicket = () => (dispatch, getState) => {
-    const { ticket_id } = getState();
-
-    if (!ticket_id) {
-        return null;
-    }
-
-    ZAFClient.request(`/api/v2/tickets/${ticket_id}.json`).then(function (data) {
-        const custom_fields = data.ticket.custom_fields;
-        let saved_subcategory = null;
-
-        custom_fields.forEach((field) => {
-            if (field.id === 360016232092) {
-                saved_subcategory = field.value;
-            }
-        });
-
-        console.log('saving to state:', saved_category);
-
-        dispatch(changeState({ saved_subcategory }));
-    });
-}
-*/
-
 var getTicketId = function getTicketId() {
   return function (dispatch) {
     _misc_ZAFClient__WEBPACK_IMPORTED_MODULE_0__["default"].get('ticket.id').then(function (data) {
@@ -22295,8 +22279,8 @@ var getTicketId = function getTicketId() {
 };
 var setSubcategoryOnTicket = function setSubcategoryOnTicket(subcategory) {
   return function (dispatch, getState) {
-    var _getState = getState(),
-        ticket_id = _getState.ticket_id;
+    var _getState2 = getState(),
+        ticket_id = _getState2.ticket_id;
 
     var data = {
       ticket: {
@@ -22320,8 +22304,7 @@ var updateSubcategories = function updateSubcategories() {
       var subcategories = data.ticket_field.custom_field_options;
       subcategories.forEach(function (subcat) {
         return subcat.categories = ['Account', 'Billing'];
-      }); //console.log('subcategories', subcategories);
-
+      });
       dispatch(changeState({
         subcategories: subcategories,
         suggestions: subcategories
@@ -23602,8 +23585,6 @@ function (_React$Component) {
           subcategory = _this$props.subcategory,
           changeState = _this$props.changeState,
           setAppHeight = _this$props.setAppHeight;
-      console.log('category:', category);
-      console.log('subcategory:', subcategory);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_4__["default"], {
         placeholder: "Choose a subcategory",
         value: subcategory ? subcategory.value : '',
@@ -23758,16 +23739,17 @@ function (_React$Component) {
   _createClass(Main, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      this.props.applyListeners();
       this.props.getTicketStatus();
       this.props.getGroup();
       this.props.getTicketId();
       this.props.updateSubcategories();
       this.props.getSavedSubcategoryFromTicket();
+      this.props.applyListeners();
     }
   }, {
     key: "componentDidUpdate",
     value: function componentDidUpdate() {
+      console.log('componentDidUpdate()');
       var height = document.getElementById('app').clientHeight;
       this.props.setAppHeight(height + 30);
     }

@@ -42,9 +42,6 @@ export default class SubcategoryMenu extends React.Component {
             setAppHeight,
         } = this.props;
 
-        console.log('category:', category);
-        console.log('subcategory:', subcategory);
-
         return (
             <Select
                 placeholder='Choose a subcategory'

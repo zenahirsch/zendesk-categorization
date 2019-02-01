@@ -52,15 +52,16 @@ export default class Main extends React.Component {
     }
 
     componentDidMount () {
-        this.props.applyListeners();
         this.props.getTicketStatus();
         this.props.getGroup();
         this.props.getTicketId();
         this.props.updateSubcategories();
         this.props.getSavedSubcategoryFromTicket();
+        this.props.applyListeners();
     }
 
     componentDidUpdate () {
+        console.log('componentDidUpdate()')
         const height = document.getElementById('app').clientHeight;
 
         this.props.setAppHeight(height + 30);
