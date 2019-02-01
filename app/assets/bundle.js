@@ -23359,7 +23359,9 @@ var CategoryMenu = (_dec = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["conn
 }, function (dispatch) {
   return _objectSpread({}, Object(redux__WEBPACK_IMPORTED_MODULE_1__["bindActionCreators"])({
     changeState: _actions__WEBPACK_IMPORTED_MODULE_5__["changeState"]
-  }, dispatch));
+  }, dispatch), {
+    setAppHeight: _actions__WEBPACK_IMPORTED_MODULE_5__["setAppHeight"]
+  });
 }), _dec(_class =
 /*#__PURE__*/
 function (_React$Component) {
@@ -23388,7 +23390,8 @@ function (_React$Component) {
       var _this$props = this.props,
           category = _this$props.category,
           groups = _this$props.groups,
-          changeState = _this$props.changeState;
+          changeState = _this$props.changeState,
+          setAppHeight = _this$props.setAppHeight;
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_4__["default"], {
         placeholder: "Choose a category",
         value: category ? category.value : '',
@@ -23401,7 +23404,15 @@ function (_React$Component) {
         },
         styles: _dropdownStyles__WEBPACK_IMPORTED_MODULE_6__["dropdownStyles"],
         className: "react-select",
-        classNamePrefix: "react-select"
+        classNamePrefix: "react-select",
+        onMenuOpen: function onMenuOpen() {
+          var height = document.getElementById('app').clientHeight;
+          setAppHeight(height + 50);
+        },
+        onMenuClose: function onMenuClose() {
+          var height = document.getElementById('app').clientHeight;
+          setAppHeight(height);
+        }
       });
     }
   }]);
@@ -23564,7 +23575,9 @@ var SubcategoryMenu = (_dec = Object(react_redux__WEBPACK_IMPORTED_MODULE_2__["c
 }, function (dispatch) {
   return _objectSpread({}, Object(redux__WEBPACK_IMPORTED_MODULE_1__["bindActionCreators"])({
     changeState: _actions__WEBPACK_IMPORTED_MODULE_5__["changeState"]
-  }, dispatch));
+  }, dispatch), {
+    setAppHeight: _actions__WEBPACK_IMPORTED_MODULE_5__["setAppHeight"]
+  });
 }), _dec(_class =
 /*#__PURE__*/
 function (_React$Component) {
@@ -23587,7 +23600,8 @@ function (_React$Component) {
       var _this$props = this.props,
           category = _this$props.category,
           subcategory = _this$props.subcategory,
-          changeState = _this$props.changeState;
+          changeState = _this$props.changeState,
+          setAppHeight = _this$props.setAppHeight;
       console.log('category:', category);
       console.log('subcategory:', subcategory);
       return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react_select__WEBPACK_IMPORTED_MODULE_4__["default"], {
@@ -23599,7 +23613,15 @@ function (_React$Component) {
             subcategory: subcategory.value
           });
         },
-        styles: _dropdownStyles__WEBPACK_IMPORTED_MODULE_6__["dropdownStyles"]
+        styles: _dropdownStyles__WEBPACK_IMPORTED_MODULE_6__["dropdownStyles"],
+        onMenuOpen: function onMenuOpen() {
+          var height = document.getElementById('app').clientHeight;
+          setAppHeight(height + 150);
+        },
+        onMenuClose: function onMenuClose() {
+          var height = document.getElementById('app').clientHeight;
+          setAppHeight(height);
+        }
       });
     }
   }]);
@@ -23736,7 +23758,6 @@ function (_React$Component) {
   _createClass(Main, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var height = document.getElementById('app').clientHeight;
       this.props.applyListeners();
       this.props.getTicketStatus();
       this.props.getGroup();
@@ -23746,16 +23767,9 @@ function (_React$Component) {
     }
   }, {
     key: "componentDidUpdate",
-    value: function componentDidUpdate(prevProps) {
+    value: function componentDidUpdate() {
       var height = document.getElementById('app').clientHeight;
-
-      if (this.props.saved_subcategory) {
-        this.props.setAppHeight(height + 20);
-      } else if (this.props.ticket_status === 'closed') {
-        this.props.setAppHeight(height);
-      } else {
-        this.props.setAppHeight(height + 100);
-      }
+      this.props.setAppHeight(height + 30);
     }
   }, {
     key: "render",

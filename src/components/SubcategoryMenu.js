@@ -7,6 +7,7 @@ import Select from 'react-select';
 
 import {
     changeState,
+    setAppHeight,
 } from '../actions';
 
 import { dropdownStyles } from './dropdownStyles';
@@ -20,6 +21,7 @@ import { categoryData } from '../categoryData';
     }),
     dispatch => ({
         ...bindActionCreators({ changeState }, dispatch),
+        setAppHeight,
     })
 )
 export default class SubcategoryMenu extends React.Component {
@@ -37,6 +39,7 @@ export default class SubcategoryMenu extends React.Component {
             category,
             subcategory,
             changeState,
+            setAppHeight,
         } = this.props;
 
         console.log('category:', category);
@@ -49,6 +52,14 @@ export default class SubcategoryMenu extends React.Component {
                 options={this.getOptions(category)}
                 onChange={(subcategory) => changeState({ subcategory: subcategory.value })}
                 styles={dropdownStyles}
+                onMenuOpen={() => {
+                    const height = document.getElementById('app').clientHeight;
+                    setAppHeight(height + 150);
+                }}
+                onMenuClose={() => {
+                    const height = document.getElementById('app').clientHeight;
+                    setAppHeight(height);
+                }}
             />
         );
     }

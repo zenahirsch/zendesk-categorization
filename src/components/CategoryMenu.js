@@ -5,7 +5,10 @@ import { connect } from 'react-redux';
 import Form from 'react-bootstrap/Form';
 import Select from 'react-select';
 
-import { changeState } from '../actions';
+import {
+    changeState,
+    setAppHeight,
+} from '../actions';
 
 import { dropdownStyles } from './dropdownStyles';
 
@@ -18,6 +21,7 @@ import { groupData } from '../groupData';
     }),
     dispatch => ({
         ...bindActionCreators({ changeState }, dispatch),
+        setAppHeight,
     })
 )
 export default class CategoryMenu extends React.Component {
@@ -43,6 +47,7 @@ export default class CategoryMenu extends React.Component {
             category,
             groups,
             changeState,
+            setAppHeight,
         } = this.props;
 
         return (
@@ -54,6 +59,14 @@ export default class CategoryMenu extends React.Component {
                 styles={dropdownStyles}
                 className="react-select"
                 classNamePrefix="react-select"
+                onMenuOpen={() => {
+                    const height = document.getElementById('app').clientHeight;
+                    setAppHeight(height + 50);
+                }}
+                onMenuClose={() => {
+                    const height = document.getElementById('app').clientHeight;
+                    setAppHeight(height);
+                }}
             />
         );
     }

@@ -52,8 +52,6 @@ export default class Main extends React.Component {
     }
 
     componentDidMount () {
-        const height = document.getElementById('app').clientHeight;
-
         this.props.applyListeners();
         this.props.getTicketStatus();
         this.props.getGroup();
@@ -62,16 +60,10 @@ export default class Main extends React.Component {
         this.props.getSavedSubcategoryFromTicket();
     }
 
-    componentDidUpdate (prevProps) {
+    componentDidUpdate () {
         const height = document.getElementById('app').clientHeight;
-        
-        if (this.props.saved_subcategory) {
-            this.props.setAppHeight(height + 20);
-        } else if (this.props.ticket_status === 'closed') {
-            this.props.setAppHeight(height);
-        } else {
-            this.props.setAppHeight(height + 100);
-        }
+
+        this.props.setAppHeight(height + 30);
     }
 
     render () {
