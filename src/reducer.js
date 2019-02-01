@@ -1,9 +1,15 @@
 import { actions } from './actions';
 
 const initialState = {
-    category: 'item-1',
-    subcategory: 'item-2',
-    subsubcategory: 'item-3'
+    subcategories: [],
+    value: '',
+    suggestions: [],
+    category: null,
+    subcategory: null,
+    groups: [],
+    ticket_status: null,
+    ticket_id: null,
+    saved_subcategory: null,
 };
 
 const rootReducer = (state = initialState, action) => {
@@ -17,18 +23,10 @@ const rootReducer = (state = initialState, action) => {
 
 const reducer = (state = initialState, action) => {
 
-    if (action.type === actions.SET_REQUESTER_EMAIL) {
+    if (action.type === actions.CHANGE_STATE) {
         return {
             ...state,
-            requesterEmail: action.email,
-        };
-    }
-
-    if (action.type === actions.CHANGE_PAGE) {
-        return {
-            ...state,
-            page: action.page,
-            pageData: action.data,
+            ...action,
         };
     }
 

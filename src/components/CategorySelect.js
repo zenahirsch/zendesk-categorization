@@ -1,42 +1,46 @@
 import React from 'react';
-import { render } from 'react-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import { resetStore } from '../actions';
-import { SelectField, Label, Hint, Select, Item } from '@zendeskgarden/react-select';
+import Fuse from 'fuse.js';
+
+import {
+    changeState,
+    setAppHeight,
+    setSubcategoryOnTicket,
+} from '../actions';
+
+import Autosuggest from 'react-autosuggest';
+
+import CategoryMenu from './CategoryMenu';
+import SubcategoryMenu from './SubcategoryMenu';
+
+import './theme.css';
 
 @connect(
     state => ({
-        category: state.category
+        subcategories: state.subcategories,
+        value: state.value,
+        suggestions: state.suggestions,
+        subcategory: state.subcategory,
     }),
     dispatch => ({
-        ...bindActionCreators({ resetStore }, dispatch),
+        ...bindActionCreators({ changeState, setSubcategoryOnTicket }, dispatch),
+        setAppHeight
     })
 )
 export default class CategorySelect extends React.Component {
 
     constructor (props) {
         super(props);
-
-        props.resetStore();
-
-        this.ref = React.createRef();
     }
 
     render () {
-        const { category } = this.props;
-
         return (
-            <SelectField>
-                <Label>Example Select</Label>
-                <Select
-                    selectedKey={category}
-                    onChange={selectedKey => setState({ category })}
-                    options={[<Item key="item-1">Item 1</Item>, <Item key="item-2">Item 2</Item>]}
-                >
-                    {category}
-                </Select>
-            </SelectField>
+            <div>
+                <CategoryMenu />
+                <br />
+                <SubcategoryMenu />
+            </div>
         );
     }
 }
