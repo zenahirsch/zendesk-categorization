@@ -23,7 +23,6 @@ if (isProductionBuild) {
             'NODE_ENV': JSON.stringify('production')
         }
     }));
-    plugins.push(new webpack.optimize.UglifyJsPlugin());
 }
 
 module.exports = {
@@ -34,6 +33,9 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.jsx'],
+    },
+    optimization: {
+        minimize: isProductionBuild,
     },
     module: {
         rules: [
@@ -55,14 +57,8 @@ module.exports = {
             },
             {
                 test: /\.css$/,
-                use: [
-                    {
-                        loader: MiniCssExtractPlugin.loader,
-                        options: {}
-                    },
-                    'css-loader'
-                ]
-            }
+                use: ['style-loader', 'css-loader'],
+            },
         ]
     },
     plugins: plugins,

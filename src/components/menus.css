@@ -1,0 +1,16 @@
+.menu {
+    width: 100%;
+    margin-bottom: 10px;
+    height: 30px;
+    /*
+    background-color: white;
+    color: rgba(0, 0, 0, 0.85)
+    */
+}
+
+.filter {
+    width: 50%;
+    font-size: 12px;
+    margin-bottom: 18px;
+    opacity: 0.65;
+}

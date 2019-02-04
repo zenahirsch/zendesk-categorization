@@ -12,20 +12,14 @@ export const groupData = {
             { label: 'API / Developer / Backend', value: 'api_developer' },
             { label: 'Player / Playback', value: 'player_playback' },
             { label: 'Uploading / Conversion', value: 'uploading_conversion' },
-            { label: 'VOD', value: 'vod' },
+            { label: 'VOD Buyer', value: 'vod_buyer' },
+            { label: 'VOD Seller', value: 'vod_seller' },
             { label: 'Stats', value: 'stats' },
             { label: 'Other', value: 'other' },
         ]
     },
     27056858: {
         label: 'Trust & Safety',
-        categories: [
-            { label: 'Other', value: 'other' },
-            { label: 'Trust & Safety', value: 'trust_safety' },
-        ]
-    },
-    360000238208: {
-        label: 'Trust & Safety - Tier 2',
         categories: [
             { label: 'Other', value: 'other' },
             { label: 'Trust & Safety', value: 'trust_safety' },

@@ -10,16 +10,15 @@ import {
     resetStore,
     changeState,
     setAppHeight,
-    updateSubcategories,
+    getSubcategories,
     getSavedSubcategoryFromTicket,
     setSubcategoryOnTicket,
-    getTicketStatus,
-    getGroup,
-    getTicketId,
+    getTicketData,
 } from '../actions';
 
 import CurrentCategorization from '../components/CurrentCategorization';
 import CategoryMenu from '../components/CategoryMenu';
+import CategoryFilter from '../components/CategoryFilter';
 import SubcategoryMenu from '../components/SubcategoryMenu';
 
 @connect(
@@ -28,20 +27,20 @@ import SubcategoryMenu from '../components/SubcategoryMenu';
         subcategory: state.subcategory,
         ticket_status: state.ticket_status,
         saved_subcategory: state.saved_subcategory,
+        subcat_field_value: state.subcat_field_value,
+        loading: state.loading,
     }),
     dispatch => ({
         ...bindActionCreators({
             resetStore,
             applyListeners,
-            updateSubcategories,
-            getTicketStatus,
-            getGroup,
-            getTicketId,
             getSavedSubcategoryFromTicket,
             setSubcategoryOnTicket,
             changeState,
         }, dispatch),
         setAppHeight,
+        getSubcategories,
+        getTicketData,
     })
 )
 export default class Main extends React.Component {
@@ -52,30 +51,64 @@ export default class Main extends React.Component {
     }
 
     componentDidMount () {
-        this.props.getTicketStatus();
-        this.props.getGroup();
-        this.props.getTicketId();
-        this.props.updateSubcategories();
-        this.props.getSavedSubcategoryFromTicket();
-        this.props.applyListeners();
+        const {
+            getTicketData,
+            getSavedSubcategoryFromTicket,
+            getSubcategories,
+            applyListeners,
+            changeState,
+        } = this.props;
+
+        getTicketData()
+            .then((data) => {
+                changeState({
+                    ticket_status: data['ticket.status'],
+                    groups: data['currentUser.groups'],
+                    subcat_field_value: data['ticket.customField:custom_field_360016232092'],
+                    ticket_id: data['ticket.id'],
+                }); 
+            })
+            .then(getSavedSubcategoryFromTicket)
+            .then((data) => {
+                const { custom_fields } = data.ticket;
+                const subcategory_field = custom_fields.filter((field) => field.id === 360016232092)[0];
+                const saved_subcategory = subcategory_field.value;
+                changeState({ saved_subcategory }); 
+            })
+            .then(getSubcategories)
+            .then((data) => {
+                const subcategories = data.ticket_field.custom_field_options;
+                changeState({ subcategories });
+            })
+            .then(applyListeners)
+            .then(() => changeState({ loading: false }));
     }
 
     componentDidUpdate () {
-        console.log('componentDidUpdate()')
         const height = document.getElementById('app').clientHeight;
 
-        this.props.setAppHeight(height + 30);
+        this.props.setAppHeight(height);
     }
 
     render () {
         const {
+            loading,
             ticket_status,
             category,
             subcategory,
             saved_subcategory,
+            subcat_field_value,
             changeState,
             setSubcategoryOnTicket,
         } = this.props;
+
+        if (loading) {
+            return (
+                <div>
+                    <small>Loading...</small>
+                </div>
+            );
+        }
 
         if (ticket_status === 'closed') {
             return (
@@ -88,15 +121,15 @@ export default class Main extends React.Component {
 
         if (saved_subcategory) {
             return (
-                <div>
+                <div style={{ height: '100px' }}>
                     <CurrentCategorization />
                     <Button
                         variant="outline-secondary"
                         size="sm"
                         block
                         onClick={() => changeState({
-                            saved_subcategory: null,
-                            subcategory: null
+                            saved_subcategory: '',
+                            subcategory: '',
                         })}
                     >
                         Change
@@ -108,19 +141,18 @@ export default class Main extends React.Component {
         return (
             <div>
                 <CategoryMenu />
-                <br />
                 <SubcategoryMenu />
                 <br />
                 <Button
-                    variant="outline-primary"
+                    variant="primary"
                     size="sm"
                     block
                     onClick={() => {
                         setSubcategoryOnTicket(subcategory);
                         changeState({
                             saved_subcategory: subcategory,
-                            category: null,
-                            subcategory: null,
+                            category: '',
+                            subcategory: '',
                         });
                     }}
                     disabled={!subcategory}

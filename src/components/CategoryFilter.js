@@ -2,12 +2,11 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import uuidv1 from  'uuid/v1';
+import { Dropdown } from 'semantic-ui-react';
 
 import { changeState } from '../actions';
 
 import { groupData } from '../groupData';
-
-import './menus.css';
 
 @connect(
     state => ({
@@ -18,7 +17,7 @@ import './menus.css';
         ...bindActionCreators({ changeState }, dispatch),
     })
 )
-export default class CategoryMenu extends React.Component {
+export default class CategoryFilter extends React.Component {
 
     constructor (props) {
         super(props);
@@ -52,8 +51,9 @@ export default class CategoryMenu extends React.Component {
             return index === self.findIndex((o) => o.value === option.value);
         });
 
-        // turn into option elements
-        options = options.map((option) => <option value={option.value} key={uuidv1()}>{option.label}</option>);
+        options = options.map((option) => {
+            return <Dropdown.Item key={uuidv1()} text={option.label} value={option.value} />
+        })
 
         return options;
     }
@@ -66,18 +66,17 @@ export default class CategoryMenu extends React.Component {
         } = this.props;
 
         return (
-            <div>
-                <small><strong>Filter by category: </strong></small>
-                <select
-                    placeholder='Choose a Category'
-                    onChange={(e) => changeState({ category: e.target.value, subcategory: '' })}
-                    className='filter'
-                    value={category}
-                >   
-                    <option value=''>None</option>
+            <Dropdown
+                text={'Categories'}
+                value={category}
+                onChange={(e, { value }) => {
+                    changeState({ category: data.value, subcategory: '' });
+                }}
+            >
+                <Dropdown.Menu>
                     {this.getOptions(groups)}
-                </select>
-            </div>
+                </Dropdown.Menu>
+            </Dropdown>
         );
     }
 }

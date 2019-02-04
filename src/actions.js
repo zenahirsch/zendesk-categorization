@@ -14,10 +14,17 @@ export const applyListeners = () => (dispatch, getState) => {
         dispatch(changeState({ ticket_status }));
     });
 
+    ZAFClient.on('ticket.custom_field_360016232092.changed', function (value) {
+        dispatch(changeState({
+            subcat_field_value: value,
+            subcategory: value,
+        }));
+    });
+
     ZAFClient.on('ticket.save', function () {
-        const { saved_subcategory } = getState();
-        console.log('saved_subcategory:', saved_subcategory)
-        if (!saved_subcategory) {
+        const { subcat_field_value } = getState();
+
+        if (!subcat_field_value) {
             return 'Ticket must be categorized.';
         }
 
@@ -25,32 +32,26 @@ export const applyListeners = () => (dispatch, getState) => {
     });
 };
 
-export const getTicketStatus = () => (dispatch) => {
-    ZAFClient.get('ticket.status').then(function (data) {
-        dispatch(changeState({ ticket_status: data['ticket.status'] }));
-    });
+export const getTicketData = () => {
+    const paths = [
+        'ticket.status',
+        'currentUser.groups',
+        'ticket.customField:custom_field_360016232092',
+        'ticket.id',
+    ];
+
+    return ZAFClient.get(paths);
 };
 
-export const getGroup = () => (dispatch) => {
-    ZAFClient.get('currentUser.groups').then(function (data) {
-        dispatch(changeState({ groups: data['currentUser.groups'] }));
-    });
+export const getSavedSubcategoryFromTicket = () => (dispatch, getState) => {
+    const { ticket_id } = getState();
+
+    return ZAFClient.request(`/api/v2/tickets/${ticket_id}.json`);
 };
 
-
-export const getSavedSubcategoryFromTicket = () => (dispatch) => {
-    ZAFClient.get('ticket.customField:custom_field_360016232092').then(function (data) {
-        const saved_subcategory = data['ticket.customField:custom_field_360016232092'];
-
-        dispatch(changeState({ saved_subcategory }));
-    });
-};
-
-export const getTicketId = () => (dispatch) => {
-    ZAFClient.get('ticket.id').then(function (data) {
-        dispatch(changeState({ ticket_id: data['ticket.id'] }));
-    });
-};
+export const getSubcategories = () => {
+    return ZAFClient.request('/api/v2/ticket_fields/360016232092.json');
+}
 
 export const setSubcategoryOnTicket = (subcategory) => (dispatch, getState) => {
     const { ticket_id } = getState();
@@ -68,14 +69,6 @@ export const setSubcategoryOnTicket = (subcategory) => (dispatch, getState) => {
         contentType: 'application/json'
     });
 };
-
-export const updateSubcategories = () => (dispatch) => {
-    ZAFClient.request('/api/v2/ticket_fields/360016232092.json').then(function (data) {
-        const subcategories = data.ticket_field.custom_field_options;
-        subcategories.forEach((subcat) => subcat.categories = ['Account', 'Billing']);
-        dispatch(changeState({ subcategories, suggestions: subcategories }));
-    });
-}
 
 export const resetStore = () => ({
     type: actions.RESET_STORE,

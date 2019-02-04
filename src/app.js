@@ -7,6 +7,7 @@ import reducer from './reducer';
 
 import Main from './containers/Main';
 
+
 const store = createStore(reducer,
     compose(
         applyMiddleware(

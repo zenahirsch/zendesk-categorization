@@ -4,12 +4,14 @@ const initialState = {
     subcategories: [],
     value: '',
     suggestions: [],
-    category: null,
-    subcategory: null,
+    category: '',
+    subcategory: '',
     groups: [],
     ticket_status: null,
     ticket_id: null,
-    saved_subcategory: null,
+    saved_subcategory: '',
+    subcat_field_value: '',
+    loading: true,
 };
 
 const rootReducer = (state = initialState, action) => {

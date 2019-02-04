@@ -17,12 +17,6 @@ export default class CurrentCategorization extends React.Component {
         super(props);
     }
 
-    onComponentDidMount () {
-        $('#categorization-alert').on('closed.bs.alert', function () {
-            console.log('closed alert');
-        });
-    }
-
     render () {
         const {
             saved_subcategory,
@@ -41,7 +35,7 @@ export default class CurrentCategorization extends React.Component {
         }
 
         return (
-            <p><small>This ticket is currently categorized as <strong>{getSubcategoryName(saved_subcategory)}.</strong></small></p>
+            <p><small>This ticket is categorized as <strong>{getSubcategoryName(saved_subcategory)}</strong>.</small></p>
         );
     }
 }
