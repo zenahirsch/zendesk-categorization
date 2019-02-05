@@ -16,6 +16,7 @@ export const groupData = {
             { label: 'VOD Seller', value: 'vod_seller' },
             { label: 'Stats', value: 'stats' },
             { label: 'Other', value: 'other' },
+            { label: 'Trust & Safety', value: 'trust_safety' },
         ]
     },
     27056858: {

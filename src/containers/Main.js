@@ -27,7 +27,6 @@ import SubcategoryMenu from '../components/SubcategoryMenu';
         subcategory: state.subcategory,
         ticket_status: state.ticket_status,
         saved_subcategory: state.saved_subcategory,
-        subcat_field_value: state.subcat_field_value,
         loading: state.loading,
     }),
     dispatch => ({
@@ -64,7 +63,7 @@ export default class Main extends React.Component {
                 changeState({
                     ticket_status: data['ticket.status'],
                     groups: data['currentUser.groups'],
-                    subcat_field_value: data['ticket.customField:custom_field_360016232092'],
+                    subcategory: data['ticket.customField:custom_field_360016232092'],
                     ticket_id: data['ticket.id'],
                 }); 
             })
@@ -97,7 +96,6 @@ export default class Main extends React.Component {
             category,
             subcategory,
             saved_subcategory,
-            subcat_field_value,
             changeState,
             setSubcategoryOnTicket,
         } = this.props;
@@ -142,23 +140,6 @@ export default class Main extends React.Component {
             <div>
                 <CategoryMenu />
                 <SubcategoryMenu />
-                <br />
-                <Button
-                    variant="primary"
-                    size="sm"
-                    block
-                    onClick={() => {
-                        setSubcategoryOnTicket(subcategory);
-                        changeState({
-                            saved_subcategory: subcategory,
-                            category: '',
-                            subcategory: '',
-                        });
-                    }}
-                    disabled={!subcategory}
-                >
-                    Save
-                </Button>
             </div>
         );
     }

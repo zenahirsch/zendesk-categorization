@@ -10,7 +10,6 @@ const initialState = {
     ticket_status: null,
     ticket_id: null,
     saved_subcategory: '',
-    subcat_field_value: '',
     loading: true,
 };
 

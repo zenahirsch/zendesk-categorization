@@ -3,7 +3,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import uuidv1 from  'uuid/v1';
 
-import { changeState } from '../actions';
+import {
+    changeState,
+    setSubcategoryTicketField,
+} from '../actions';
 
 import { groupData } from '../groupData';
 import { categoryData } from '../categoryData';
@@ -18,6 +21,7 @@ import './menus.css';
     }),
     dispatch => ({
         ...bindActionCreators({ changeState }, dispatch),
+        setSubcategoryTicketField,
     })
 )
 export default class SubcategoryMenu extends React.Component {
@@ -77,14 +81,15 @@ export default class SubcategoryMenu extends React.Component {
             category,
             subcategory,
             changeState,
+            setSubcategoryTicketField,
         } = this.props;
 
         return (
             <select
                 placeholder='Choose a subcategory'
-                onChange={(e) => changeState({ subcategory: e.target.value })}
+                onChange={(e) => setSubcategoryTicketField(e.target.value)}
                 className='menu'
-                value={subcategory}
+                value={subcategory || ''}
             >
                 <option value='' disabled>Select a subcategory</option>
                 {this.getOptions(category, groups)}

@@ -14,17 +14,14 @@ export const applyListeners = () => (dispatch, getState) => {
         dispatch(changeState({ ticket_status }));
     });
 
-    ZAFClient.on('ticket.custom_field_360016232092.changed', function (value) {
-        dispatch(changeState({
-            subcat_field_value: value,
-            subcategory: value,
-        }));
+    ZAFClient.on('ticket.custom_field_360016232092.changed', function (subcategory) {
+        dispatch(changeState({ subcategory }));
     });
 
     ZAFClient.on('ticket.save', function () {
-        const { subcat_field_value } = getState();
+        const { subcategory } = getState();
 
-        if (!subcat_field_value) {
+        if (!subcategory) {
             return 'Ticket must be categorized.';
         }
 
@@ -41,6 +38,10 @@ export const getTicketData = () => {
     ];
 
     return ZAFClient.get(paths);
+};
+
+export const setSubcategoryTicketField = (subcategory) => {
+    return ZAFClient.set('ticket.customField:custom_field_360016232092', subcategory);
 };
 
 export const getSavedSubcategoryFromTicket = () => (dispatch, getState) => {
