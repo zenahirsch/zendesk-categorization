@@ -1,38 +1,27 @@
 import { actions } from './actions';
 
 const initialState = {
-    subcategories: [],
-    value: '',
-    suggestions: [],
-    category: '',
-    subcategory: '',
-    groups: [],
-    ticket_status: null,
-    ticket_id: null,
-    saved_subcategory: '',
-    loading: true,
-};
-
-const rootReducer = (state = initialState, action) => {
-
-    if (action.type === actions.RESET_STORE) {
-        state = undefined
-    }
-
-    return reducer(state, action)
+  subcategories: [],
+  value: '',
+  suggestions: [],
+  category: '',
+  subcategory: '',
+  groups: [],
+  ticketStatus: null,
+  ticketId: null,
+  savedSubcategory: '',
+  loading: true,
 };
 
 const reducer = (state = initialState, action) => {
+  if (action.type === actions.CHANGE_STATE) {
+    return {
+      ...state,
+      ...action,
+    };
+  }
 
-    if (action.type === actions.CHANGE_STATE) {
-        return {
-            ...state,
-            ...action,
-        };
-    }
-
-    return state;
-
+  return state;
 };
 
-export default rootReducer;
+export default reducer;

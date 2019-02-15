@@ -26,7 +26,7 @@ if (isProductionBuild) {
 }
 
 module.exports = {
-    entry: path.resolve(dir_js, 'app.js'),
+    entry: path.resolve(dir_js, 'app.jsx'),
     output: {
         path: dir_build,
         filename: 'bundle.js'
