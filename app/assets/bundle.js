@@ -20745,7 +20745,12 @@ function (_React$Component) {
     value: function render() {
       var category = this.props.category;
       var loading = this.state.loading;
-      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("strong", null, "Filter by category: ")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+      return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+        className: "d-flex mb-3"
+      }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("small", {
+        className: "font-weight-light text-muted mr-2"
+      }, "Filter by category:"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
+        className: "flex-grow-1 mb-0",
         onChange: this.handleChange,
         style: styles,
         value: category

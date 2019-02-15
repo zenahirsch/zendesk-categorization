@@ -122,9 +122,10 @@ class CategoryMenu extends React.Component {
     const { loading } = this.state;
 
     return (
-      <div>
-        <small><strong>Filter by category: </strong></small>
+      <div className="d-flex mb-3">
+        <small className="font-weight-light text-muted mr-2">Filter by category:</small>
         <select
+          className="flex-grow-1 mb-0"
           onChange={this.handleChange}
           style={styles}
           value={category}
