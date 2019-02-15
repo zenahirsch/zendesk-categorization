@@ -1,16 +1,15 @@
 import { actions } from './actions';
 
 const initialState = {
+  groups: [],
+  categories: [],
   subcategories: [],
-  value: '',
-  suggestions: [],
+  allSubcategories: [],
   category: '',
   subcategory: '',
-  groups: [],
+  savedSubcategory: '',
   ticketStatus: null,
   ticketId: null,
-  savedSubcategory: '',
-  loading: true,
 };
 
 const reducer = (state = initialState, action) => {

@@ -20,8 +20,8 @@ class CurrentCategorization extends React.Component {
       subcategories,
     } = this.props;
 
-    const record = subcategories.find(subcat => subcat.value === savedSubcategory);
-    return record ? record.name : '';
+    const record = subcategories.find(s => s.attributes.value === savedSubcategory);
+    return record ? record.attributes.label : '';
   }
 
   render() {

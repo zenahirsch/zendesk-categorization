@@ -1,15 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
 import uuidv1 from 'uuid/v1';
 
 import {
+  getAllSubcategories,
   setSubcategoryTicketField,
 } from '../actions';
-
-import groupData from '../groupData';
-import categoryData from '../categoryData';
 
 const styles = {
   width: '100%',
@@ -18,9 +17,14 @@ const styles = {
 };
 
 const mapStateToProps = state => ({
-  groups: state.groups,
-  category: state.category,
   subcategory: state.subcategory,
+  subcategories: state.subcategories,
+});
+
+const mapDispatchToProps = dispatch => ({
+  ...bindActionCreators({
+    getAllSubcategories,
+  }, dispatch),
 });
 
 class SubcategoryMenu extends React.Component {
@@ -31,28 +35,17 @@ class SubcategoryMenu extends React.Component {
   }
 
   getOptions() {
-    const { category, groups } = this.props;
+    const {
+      subcategories,
+    } = this.props;
 
-    const categories = [];
     let options = [];
 
-    if (categoryData[category]) {
-      options = categoryData[category].subcategories;
-    }
-
-    // if not filtered
-    if (category === '') {
-      groups.forEach((group) => {
-        if (group.id in groupData) {
-          categories.push(...groupData[group.id].categories);
-        }
-      });
-
-      categories.forEach((category) => {
-        if (category.value in categoryData) {
-          options.push(...categoryData[category.value].subcategories);
-        }
-      });
+    if (subcategories && subcategories.length) {
+      options = subcategories.map(s => ({
+        label: s.attributes.label,
+        value: s.attributes.value,
+      }));
     }
 
     options.sort((a, b) => {
@@ -67,16 +60,15 @@ class SubcategoryMenu extends React.Component {
       return 0;
     });
 
-    // remove duplicates
-    options = options.filter((option, index, self) => (
-      index === self.findIndex(o => o.value === option.value)
-    ));
-
     options = options.map(option => (
       <option value={option.value} key={uuidv1()}>{option.label}</option>
     ));
 
     return options;
+  }
+
+  handleChange(e) {
+    setSubcategoryTicketField(e.target.value);
   }
 
   render() {
@@ -87,7 +79,7 @@ class SubcategoryMenu extends React.Component {
     return (
       <select
         placeholder="Choose a subcategory"
-        onChange={e => setSubcategoryTicketField(e.target.value)}
+        onChange={this.handleChange}
         style={styles}
         value={subcategory || ''}
       >
@@ -99,9 +91,8 @@ class SubcategoryMenu extends React.Component {
 }
 
 SubcategoryMenu.propTypes = {
-  category: PropTypes.string.isRequired,
-  groups: PropTypes.arrayOf(PropTypes.object).isRequired,
+  subcategories: PropTypes.arrayOf(PropTypes.object),
   subcategory: PropTypes.string.isRequired,
 };
 
-export default connect(mapStateToProps)(SubcategoryMenu);
+export default connect(mapStateToProps, mapDispatchToProps)(SubcategoryMenu);

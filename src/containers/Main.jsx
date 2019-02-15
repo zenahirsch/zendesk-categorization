@@ -11,9 +11,9 @@ import {
   applyListeners,
   changeState,
   setAppHeight,
-  getSubcategories,
   getSavedSubcategoryFromTicket,
   getTicketData,
+  getAllSubcategories,
 } from '../actions';
 
 import CurrentCategorization from '../components/CurrentCategorization';
@@ -21,13 +21,14 @@ import CategoryMenu from '../components/CategoryMenu';
 import SubcategoryMenu from '../components/SubcategoryMenu';
 
 const mapStateToProps = state => ({
-  ticket_status: state.ticket_status,
+  ticketStatus: state.ticketStatus,
   savedSubcategory: state.savedSubcategory,
-  loading: state.loading,
 });
 
 const mapDispatchToProps = dispatch => ({
   ...bindActionCreators({
+    getTicketData,
+    getAllSubcategories,
     applyListeners,
     getSavedSubcategoryFromTicket,
     changeState,
@@ -35,36 +36,27 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Main extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      loading: true,
+    };
+  }
+
   componentDidMount() {
     const {
+      getTicketData,
+      getAllSubcategories,
       getSavedSubcategoryFromTicket,
       applyListeners,
-      changeState,
     } = this.props;
 
     getTicketData()
-      .then((data) => {
-        changeState({
-          ticketStatus: data['ticket.status'],
-          groups: data['currentUser.groups'],
-          subcategory: data['ticket.customField:custom_field_360016232092'],
-          ticketId: data['ticket.id'],
-        });
-      })
+      .then(getAllSubcategories)
       .then(getSavedSubcategoryFromTicket)
-      .then((data) => {
-        const { custom_fields: customFields } = data.ticket;
-        const subcategoryField = customFields.filter(field => field.id === 360016232092)[0];
-        const savedSubcategory = subcategoryField.value;
-        changeState({ savedSubcategory });
-      })
-      .then(getSubcategories)
-      .then((data) => {
-        const subcategories = data.ticket_field.custom_field_options;
-        changeState({ subcategories });
-      })
       .then(applyListeners)
-      .then(() => changeState({ loading: false }));
+      .then(() => this.setState({ loading: false }));
   }
 
   componentDidUpdate() {
@@ -75,18 +67,15 @@ class Main extends React.Component {
 
   render() {
     const {
-      loading,
       ticketStatus,
       savedSubcategory,
       changeState,
     } = this.props;
 
+    const { loading } = this.state;
+
     if (loading) {
-      return (
-        <div>
-          <small>Loading...</small>
-        </div>
-      );
+      return <div>Loading...</div>;
     }
 
     if (ticketStatus === 'closed') {
@@ -127,13 +116,12 @@ class Main extends React.Component {
 }
 
 Main.propTypes = {
+  getTicketData: PropTypes.func.isRequired,
   changeState: PropTypes.func.isRequired,
   getSavedSubcategoryFromTicket: PropTypes.func.isRequired,
   applyListeners: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
   ticketStatus: PropTypes.string,
   savedSubcategory: PropTypes.string,
-
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Main);
