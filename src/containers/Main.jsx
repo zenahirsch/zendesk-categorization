@@ -5,20 +5,19 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import Button from 'react-bootstrap/Button';
+import { BarLoader } from 'react-spinners';
+
+import CurrentCategorization from '../components/CurrentCategorization';
+import CategoryMenuContainer from './CategoryMenuContainer';
+import SubcategoryMenuContainer from './SubcategoryMenuContainer';
 
 import {
   applyListeners,
-  changeState,
   setAppHeight,
   getSavedSubcategoryFromTicket,
   getTicketData,
   getAllSubcategories,
 } from '../actions';
-
-import CurrentCategorization from '../components/CurrentCategorization';
-import CategoryMenu from '../components/CategoryMenu';
-import SubcategoryMenu from '../components/SubcategoryMenu';
 
 const mapStateToProps = state => ({
   ticketStatus: state.ticketStatus,
@@ -31,7 +30,6 @@ const mapDispatchToProps = dispatch => ({
     getAllSubcategories,
     applyListeners,
     getSavedSubcategoryFromTicket,
-    changeState,
   }, dispatch),
 });
 
@@ -69,47 +67,28 @@ class Main extends React.Component {
     const {
       ticketStatus,
       savedSubcategory,
-      changeState,
     } = this.props;
 
     const { loading } = this.state;
 
     if (loading) {
-      return <div>Loading...</div>;
-    }
-
-    if (ticketStatus === 'closed') {
       return (
-        <div>
-          <CurrentCategorization />
-          <small>This ticket is closed. Categorization cannot be changed.</small>
-        </div>
+        <BarLoader
+          widthUnit="%"
+          width={100}
+          color="#36D7B7"
+        />
       );
     }
 
-    if (savedSubcategory) {
-      return (
-        <div style={{ height: '100px' }}>
-          <CurrentCategorization />
-          <Button
-            variant="outline-secondary"
-            size="sm"
-            block
-            onClick={() => changeState({
-              savedSubcategory: '',
-              subcategory: '',
-            })}
-          >
-            Change
-          </Button>
-        </div>
-      );
+    if (savedSubcategory || ticketStatus === 'closed') {
+      return <CurrentCategorization />;
     }
 
     return (
       <div>
-        <CategoryMenu />
-        <SubcategoryMenu />
+        <CategoryMenuContainer />
+        <SubcategoryMenuContainer />
       </div>
     );
   }
@@ -117,7 +96,6 @@ class Main extends React.Component {
 
 Main.propTypes = {
   getTicketData: PropTypes.func.isRequired,
-  changeState: PropTypes.func.isRequired,
   getAllSubcategories: PropTypes.func.isRequired,
   getSavedSubcategoryFromTicket: PropTypes.func.isRequired,
   applyListeners: PropTypes.func.isRequired,
