@@ -3,18 +3,12 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
 
-import uuidv1 from 'uuid/v1';
+import Menu from './Menu';
 
 import {
   getAllSubcategories,
   setSubcategoryTicketField,
 } from '../actions';
-
-const styles = {
-  width: '100%',
-  marginBottom: '10px',
-  height: '30px',
-};
 
 const mapStateToProps = state => ({
   subcategory: state.subcategory,
@@ -48,22 +42,6 @@ class SubcategoryMenu extends React.Component {
       }));
     }
 
-    options.sort((a, b) => {
-      if (a.label < b.label) {
-        return -1;
-      }
-
-      if (a.label > b.label) {
-        return 1;
-      }
-
-      return 0;
-    });
-
-    options = options.map(option => (
-      <option value={option.value} key={uuidv1()}>{option.label}</option>
-    ));
-
     return options;
   }
 
@@ -77,15 +55,17 @@ class SubcategoryMenu extends React.Component {
     } = this.props;
 
     return (
-      <select
-        placeholder="Choose a subcategory"
-        onChange={this.handleChange}
-        style={styles}
+      <Menu
         value={subcategory || ''}
-      >
-        <option value="" disabled>Select a subcategory</option>
-        {this.getOptions()}
-      </select>
+        options={this.getOptions()}
+        defaultOption={{
+          value: '',
+          label: 'Choose a subcategory',
+        }}
+        loading={false}
+        onChange={this.handleChange}
+        type="menu"
+      />
     );
   }
 }

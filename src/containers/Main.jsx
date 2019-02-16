@@ -118,6 +118,7 @@ class Main extends React.Component {
 Main.propTypes = {
   getTicketData: PropTypes.func.isRequired,
   changeState: PropTypes.func.isRequired,
+  getAllSubcategories: PropTypes.func.isRequired,
   getSavedSubcategoryFromTicket: PropTypes.func.isRequired,
   applyListeners: PropTypes.func.isRequired,
   ticketStatus: PropTypes.string,

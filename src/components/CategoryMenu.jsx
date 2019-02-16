@@ -3,20 +3,13 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import uuidv1 from 'uuid/v1';
+import Menu from './Menu';
 
 import {
   changeState,
   getSubcategoriesByCategory,
   getCategoriesForGroups,
 } from '../actions';
-
-const styles = {
-  width: '50%',
-  fontSize: '12px',
-  marginBottom: '18px',
-  opacity: 0.65,
-};
 
 const mapStateToProps = state => ({
   categories: state.categories,
@@ -66,24 +59,6 @@ class CategoryMenu extends React.Component {
       }));
     }
 
-    // alphabetize
-    options.sort((a, b) => {
-      if (a.label < b.label) {
-        return -1;
-      }
-
-      if (a.label > b.label) {
-        return 1;
-      }
-
-      return 0;
-    });
-
-    // turn into option elements
-    options = options.map(option => (
-      <option value={option.value} key={uuidv1()}>{option.label}</option>
-    ));
-
     return options;
   }
 
@@ -123,16 +98,22 @@ class CategoryMenu extends React.Component {
 
     return (
       <div className="d-flex mb-3">
-        <small className="font-weight-light text-muted mr-2">Filter by category:</small>
-        <select
-          className="flex-grow-1 mb-0"
-          onChange={this.handleChange}
-          style={styles}
-          value={category}
-        >
-          <option value="">{loading ? 'Loading...' : 'None'}</option>
-          {!loading && this.getOptions()}
-        </select>
+        <div className="small font-weight-light text-muted mr-2">
+          Filter by:
+        </div>
+        <div className="flex-grow-1">
+          <Menu
+            value={category}
+            options={this.getOptions()}
+            defaultOption={{
+              value: '',
+              label: 'None',
+            }}
+            loading={loading}
+            onChange={this.handleChange}
+            type="filter"
+          />
+        </div>
       </div>
     );
   }
