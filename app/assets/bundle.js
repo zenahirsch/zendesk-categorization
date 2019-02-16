@@ -26936,7 +26936,8 @@ var Menu = function Menu(_ref) {
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", {
     onChange: onChange,
     style: styles[type],
-    value: value
+    value: value,
+    disabled: loading
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
     value: defaultOption.value
   }, loading ? 'Loading...' : defaultOption.label), sortOptions(options).map(function (o) {

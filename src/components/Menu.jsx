@@ -50,6 +50,7 @@ const Menu = ({
       onChange={onChange}
       style={styles[type]}
       value={value}
+      disabled={loading}
     >
       <option value={defaultOption.value}>{loading ? 'Loading...' : defaultOption.label}</option>
       {sortOptions(options).map(o => <option value={o.value} key={uuidv1()}>{o.label}</option>)}
